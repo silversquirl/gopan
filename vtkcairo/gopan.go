@@ -23,11 +23,11 @@ func CreateLayout(cr cairo.Cairo) CairoLayout {
 	return l
 }
 
-func (l CairoLayout) ShowLayout() {
+func (l CairoLayout) Show() {
 	C.pango_cairo_show_layout(l.cr.Cr, l.Layout.L)
 }
 
-func (l CairoLayout) UpdateLayout() {
+func (l CairoLayout) Update() {
 	C.pango_cairo_update_layout(l.cr.Cr, l.Layout.L)
 }
 
