@@ -18,7 +18,7 @@ type Layout struct{ L *C.PangoLayout }
 
 func CreateLayoutFromC(cl unsafe.Pointer) Layout {
 	l := Layout{(*C.PangoLayout)(cl)}
-	runtime.SetFinalizer(l, func(l Layout) {
+	runtime.SetFinalizer(&l, func(l *Layout) {
 		C.g_object_unref(l.L)
 	})
 	return l
@@ -32,6 +32,12 @@ func (l Layout) SetText(text string) {
 	ctext := C.CString(text)
 	C.pango_layout_set_text(l.L, ctext, C.int(len(text)))
 	C.free(unsafe.Pointer(ctext))
+}
+
+func (l Layout) PixelSize() (int, int) {
+	var w, h C.int
+	C.pango_layout_get_pixel_size(l.L, &w, &h)
+	return int(w), int(h)
 }
 
 type WrapMode C.PangoWrapMode
@@ -60,7 +66,7 @@ func FontDescriptionFromString(desc string) FontDescription {
 	cd := C.pango_font_description_from_string(cdesc)
 	C.free(unsafe.Pointer(cdesc))
 	d := FontDescription{cd}
-	runtime.SetFinalizer(d, func(d FontDescription) {
+	runtime.SetFinalizer(&d, func(d *FontDescription) {
 		C.pango_font_description_free(d.d)
 	})
 	return d
@@ -75,7 +81,7 @@ func CreateFontMapFromC(cm unsafe.Pointer) FontMap {
 func (m FontMap) LoadFont(c Context, d FontDescription) Font {
 	cf := C.pango_font_map_load_font(m.m, c.c, d.d)
 	f := Font{cf}
-	runtime.SetFinalizer(f, func(f Font) {
+	runtime.SetFinalizer(&f, func(f *Font) {
 		C.g_object_unref(f.f)
 	})
 	return f
@@ -86,7 +92,7 @@ type Font struct{ f *C.PangoFont }
 func (f Font) Metrics() FontMetrics {
 	cm := C.pango_font_get_metrics(f.f, nil) // TODO: support fontsets
 	m := FontMetrics{cm}
-	runtime.SetFinalizer(m, func(m FontMetrics) {
+	runtime.SetFinalizer(&m, func(m *FontMetrics) {
 		C.pango_font_metrics_unref(m.m)
 	})
 	return m
