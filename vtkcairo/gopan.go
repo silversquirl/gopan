@@ -14,7 +14,7 @@ import (
 
 type CairoLayout struct {
 	gopan.Layout
-	cr cairo.Cairo
+	Cr cairo.Cairo
 }
 
 func CreateLayout(cr cairo.Cairo) CairoLayout {
@@ -24,11 +24,11 @@ func CreateLayout(cr cairo.Cairo) CairoLayout {
 }
 
 func (l CairoLayout) Show() {
-	C.pango_cairo_show_layout(l.cr.Cr, l.Layout.L)
+	C.pango_cairo_show_layout(l.Cr.Cr, l.Layout.L)
 }
 
 func (l CairoLayout) Update() {
-	C.pango_cairo_update_layout(l.cr.Cr, l.Layout.L)
+	C.pango_cairo_update_layout(l.Cr.Cr, l.Layout.L)
 }
 
 func DefaultFontMap() gopan.FontMap {
