@@ -52,6 +52,22 @@ func (l Layout) SetWrap(wrap WrapMode) {
 	C.pango_layout_set_wrap(l.L, C.PangoWrapMode(wrap))
 }
 
+func (l Layout) Width() int {
+	return int(C.pango_layout_get_width(l.L))
+}
+
+func (l Layout) SetWidth(w int) {
+	C.pango_layout_set_width(l.L, C.int(w))
+}
+
+func (l Layout) Height() int {
+	return int(C.pango_layout_get_height(l.L))
+}
+
+func (l Layout) SetHeight(w int) {
+	C.pango_layout_set_height(l.L, C.int(w))
+}
+
 type Context struct{ c *C.PangoContext }
 
 func (l Layout) Context() Context {
